@@ -29,19 +29,29 @@ io.on('connection', function (socket) {
       console.log("중복");
     }
     else {
-      //멤버중복X
-      member_list.push(id);
 
-      console.log("총멤버 " + member_list);
       //방을 만들어
       socket.join(roomname, function () {
         //방을 만들고나서 roomname 방 사람들에게 joinRoom함수로 메시지를 보내
 
-        io.to(roomname).emit('joinRoom', roomname, id, id + "가 " + roomname + "방에 들어왔습니다.");
-        for (var i = 0; i < member_list.length; i++) {
-          console.log("방맴버를보냄")
-          io.to(roomname).emit('add_member', roomname, member_list[i]);
-        }
+
+
+        console.log("방맴버를보냄")
+
+
+        var a = new Promise(function (resolve) {
+          //멤버중복X
+          member_list.push(id);
+
+          console.log("총멤버 " + member_list);
+          io.to(roomname).emit('joinRoom', roomname, id, id + "가 " + roomname + "방에 들어왔습니다.");
+          resolve(1);
+        }).then(function (resolve) {
+          io.to(roomname).emit('add_member', roomname, member_list);
+
+       
+        });
+
       });
 
     }
@@ -50,15 +60,24 @@ io.on('connection', function (socket) {
 
   socket.on('leaveRoom', function (roomname, id, msg) {
     console.log('방을 나갔습니다. 메시지는:' + msg);
-    const idx = member_list.indexOf(id);
-    // console.log(idx);
-    if (idx > -1)
-      member_list.splice(idx, 1);
-    console.log("총멤버 " + member_list);
+
     //방을 만들어
     socket.leave(roomname, function () {
       //방을 만들고나서 roomname 방 사람들에게 joinRoom함수로 메시지를 보내
-      io.to(roomname).emit('joinRoom', roomname, id, id + "가 " + roomname + "방을 나갔습니다.");
+
+      var a = new Promise(function (resolve) {
+        const idx = member_list.indexOf(id);
+        // console.log(idx);
+        if (idx > -1)
+          member_list.splice(idx, 1);
+        console.log("총멤버 " + member_list);
+        io.to(roomname).emit('leaveRoom', roomname, id, id + "가 " + roomname + "방을 나갔습니다.");
+        resolve(1);
+      }).then(function (resolve) {
+        io.to(roomname).emit('add_member', roomname, member_list);
+      
+      });
+
     });
 
   });

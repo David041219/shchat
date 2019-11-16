@@ -5,7 +5,7 @@
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
   <title> CHATTY CHAT CHAT</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+ <!-- <link rel='stylesheet' href='/stylesheets/style.css' />-->
   <script src='/javascripts/socket.io.js'></script>
   <style>
     html,
@@ -30,7 +30,7 @@
 
     #div2 {
       display: table-row;
-      height: 80%;
+      height: 90%;
       /*    background-color:blue;*/
       text-align: center;
 
@@ -38,10 +38,28 @@
 
     #div3 {
       display: table-row;
-      height: 10%;
+  
       background-color: green;
     }
+
+    #input_chat {
+     border: none; position: absolute; top:0; left:0; outline: 3px solid orchid; width:100%;height:100%; font-size: 20px;
+     padding-left: 5px;
+    }
   </style>
+  <script>
+   $(window).bind("beforeunload",function(e){
+    socket.emit('leaveRoom', roomname, id, "방 나가게 허락해줘");//방 나갈게
+   });
+
+
+   window.onresize = function (event) {
+
+    $('#totalmsg').css({height:$('#totalmsg').parents().height()+'px'});
+    $('#totalmsg').scrollTop($('#totalmsg')[0].scrollHeight);
+    
+   }
+  </script>
 </head>
 
 <body>
@@ -49,8 +67,6 @@
 
     <div style="font-size:20px;">세헌채팅방이에용</div>
 
-    <button id="join">Join room</button>
-    <button id="leave">Exit room</button>
   </div>
 
   <div id="div2">
@@ -59,16 +75,19 @@
     <div style="display:block; width:100%; height:100%; background-color:none;">
 
 
-      <div style="width:100%; height:90%; background-color:white;     align-items: center;
+      <div style="width:100%; max-height: 90%; height:90%; background-color:white;     align-items: center;
       justify-content: center; display:flex;">
-
-        <div style="width:80%; height:80%; display:block; outline:3px solid orange;">
-          
+        <!--채팅프로그램 구역-->
+        <div style="width:80%; height:80%; display:block;">
+        <!--채팅 보는창-->  
           <div style="display:flex; height:90%; width: 100%; ">
-            <div style="display:inline-block; background-color:green; height:100%; width:80%;
-              overflow-y:scroll;">
+            <div style="display:inline-block; background-color:green; height:100%; width:80%;">
 
-              <div id="totalmsg" style="text-align:left; padding-left:10px; border: 1px solid blue;">
+              <div id="totalmsg" style="overflow-y:auto;width: 100%; height:300px;
+               text-align:left; padding-left:10px; border: 1px solid blue;">
+                
+
+
               </div>
 
             </div>
@@ -77,20 +96,22 @@
 
           </div>
 
-          
-          <div style="display:flex; width:100%; height: 10%; outline:3px solid red;">
+          <!--채팅 입력창-->
+          <div style="display:flex; width:100%; height: 10%; ">
 
             <div style="background-color:red; width:20%;">
               <%=show_user%>
             </div>
-            <div style="background-color:blue; width:80%;">
-              <input id="input_chat" type="text" value="" style="width:100%;">
+            <div id='input_chat_wrapper' style="position: relative; background-color:blue; width:80%; height:100%;  ">
+              <input id="input_chat" type="text" value="">
             </div>
           </div>
           
         </div>
-
+         <!--채팅프로그램 끝--> 
       </div>
+
+
 
 
       <div style="width:100%; height:10%; background-color:red;">
@@ -105,7 +126,7 @@
   <!--div2-->
 
   <div id="div3">
-    dgsafag
+  
   </div>
 
 
@@ -122,20 +143,11 @@
 
     window.onload = function () {
       //console.log(socket);
+   $('#totalmsg').css({height:$('#totalmsg').parents().height()+'px'});
+//$('#totalmsg').css({height:'600px'});
       console.log("document ready");
       socket.emit('joinRoom', roomname, id, "방 들어가게 허락해줘");//방 들어갈게
-      $('#join').click(function () {
-        console.log("asfasf");
-        socket.emit('joinRoom', roomname, id, "방 들어가게 허락해줘");//방 들어갈게
 
-      });
-
-      $('#leave').click(function () {
-        console.log("asfasf");
-        socket.emit('leaveRoom', roomname, id, "방 나가게 허락해줘");//방 나갈게
-
-        window.location.href = "/";
-      });
 
       ///프론트에서 백앤드로 입장보내는메시지
 
@@ -145,6 +157,7 @@
           //alert(getmsg);
           $('#input_chat').val("");
           socket.emit('sendmsg_backend', roomname, id, getmsg);//방 들어갈게
+
         }
 
       });
@@ -161,11 +174,30 @@
       socket.on('joinRoom', (roomname, id, msg) => {
         console.log(msg);
         $('#totalmsg').append('<div>' + msg + '</div>');
+        $('#totalmsg').scrollTop($('#totalmsg')[0].scrollHeight);
       });
 
-      socket.on('add_member', (roomname, id) => {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
+
+
+
+
+
+
+
+
+      
+      socket.on('add_member', (roomname, idlist) => {
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        console.log(idlist);
+        $('#member_list').empty();
+        for(var i=0; i<idlist.length; i++)
+        {
+          $('#member_list').append('<div>' + idlist[i] + '</div>');
+        }
+
+
+        /*
         console.log("멤버리스트: " + member_list);
         if (member_list.length >= 1) {
           const idx = member_list.indexOf(id);
@@ -192,19 +224,26 @@
           $('#member_list').append('<div>' + id + '</div>');
 
         }
+        */
 
       });
 
+
+
+
+      
       socket.on('leaveRoom', (roomname, id, msg) => {
         console.log(msg);
         $('#totalmsg').append('<div>' + msg + '</div>');
+        $('#totalmsg').scrollTop($('#totalmsg')[0].scrollHeight);
+
       });
 
       socket.on('sendmsg_frontend', (roomname, id, msg) => {
         console.log(msg);
         $('#totalmsg').append('<div>' + id + ": " + msg + '</div>');
+        $('#totalmsg').scrollTop($('#totalmsg')[0].scrollHeight);
       });
-
     }
     var member_list = [];
   </script>
