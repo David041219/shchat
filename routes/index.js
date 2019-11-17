@@ -26,11 +26,7 @@ router.post('/chatroom', function (req, res, next) {
 router.get('/chatroom', function (req, res, next) {
   // res.render('index', { title: 'chat' });
 
-  res.render('chatroom', {
-    title: 'chat',
-    show_user: temp_user
-  });
-
+  res.redirect('/');
 
 });
 

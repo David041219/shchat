@@ -148,13 +148,33 @@
     var socket = io(window.location.origin);//백앤드소켓주소입력
 
     window.onload = function () {
+
+      var pc_device = "win16|win32|win64|mac|macintel";
+    // 접속한 디바이스 환경
+    var this_device = navigator.platform;
+    if (this_device) {
+      if (pc_device.indexOf(navigator.platform.toLowerCase()) < 0) {
+
+
+          window.location.href = '/';
+
+
+        alert("mobile로 접속하셨습니다");
+      } else {
+        //pc 모바일에 따라 메뉴와 iframe 크기 다르게 할것
+        //또한 다운로드는 pc만 제공할것
+        socket.emit('joinRoom', roomname, id, "방 들어가게 허락해줘");//방 들어갈게
+
+
+        alert("pc로 접속하셨습니다");
+      }
+    }
+
       //console.log(socket);
    $('#totalmsg').css({height:$('#totalmsg').parents().height()+'px'});
 //$('#totalmsg').css({height:'600px'});
       console.log("document ready");
-      socket.emit('joinRoom', roomname, id, "방 들어가게 허락해줘");//방 들어갈게
-
-
+ 
       ///프론트에서 백앤드로 입장보내는메시지
 
       $('#input_chat').keypress(function (e) {
