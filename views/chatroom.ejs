@@ -48,10 +48,13 @@
     }
   </style>
   <script>
-   $(window).bind("beforeunload",function(e){
+  /* $(window).bind("beforeunload",function(e){
+    socket.emit('leaveRoom', roomname, id, "방 나가게 허락해줘");//방 나갈게
+   });*/
+
+   window.addEventListener("beforeunload", function(event) {
     socket.emit('leaveRoom', roomname, id, "방 나가게 허락해줘");//방 나갈게
    });
-
 
    window.onresize = function (event) {
 
