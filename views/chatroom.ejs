@@ -24,7 +24,7 @@
     #div1 {
       display: table-row;
       height: 10%;
-      background-color: yellow;
+      background-color: rgb(150, 217, 238);
       text-align: center;
     }
 
@@ -35,15 +35,15 @@
       text-align: center;
 
     }
-
+   
     #div3 {
+      
       display: table-row;
-  
-      background-color: green;
+      background-color: rgb(150, 217, 238);
     }
 
     #input_chat {
-     border: none; position: absolute; top:0; left:0; outline: 3px solid orchid; width:100%;height:100%; font-size: 20px;
+     border: none; position: absolute; top:0; left:0; outline: 3px solid orchid; width:89%;height:100%; font-size: 20px;
      padding-left: 5px;
     }
   </style>
@@ -68,7 +68,7 @@
 <body>
   <div id="div1">
 
-    <div style="font-size:20px;">세헌채팅방이에용</div>
+    <div style="font-size:70px;">GAME ROOM</div>
 
   </div>
 
@@ -81,7 +81,7 @@
       <div style="width:100%; max-height: 90%; height:70%; background-color:white;     align-items: center;
       justify-content: center; display:flex;">
 
-      <div style="width:80%; height:80%; background-color:sandybrown; align-items: center; display:block; border: 2px solid red;">
+      <div style="width:60%; height:80%; background-color:sandybrown; align-items: center; display:block; outline:4px solid saddlebrown;">
 
       </div>
 
@@ -90,7 +90,7 @@
 
 
 
-      <div style="width:100%; height:30%; background-color:royalblue; align-items: center;
+      <div style="width:100%; height:30%; background-color:rgb(150, 217, 238); align-items: center;
       justify-content: center; display:flex;">
                 <!--채팅프로그램 구역-->
                 <div style="width:80%; height:80%; display:block;">
@@ -106,18 +106,18 @@
                         </div>
           
                       </div>
-                      <div id="member_list" style="display: inline-block; width: 20%; background-color: chocolate; ">
+                      <div id="member_list" style="display: inline-block; width: 12.5%; background-color:wheat ">
                       </div>
           
                     </div>
           
                     <!--채팅 입력창-->
-                    <div style="display:flex; width:100%; height: 10%; ">
+                    <div style="display:flex; width:100%; height: 20%; ">
           
-                      <div style="background-color:white; width:20%;">
+                      <div style="background-color:white; width:30%; font-size: large;">
                         <%=show_user%>
                       </div>
-                      <div id='input_chat_wrapper' style="position: relative; background-color:blue; width:80%; height:100%;  ">
+                      <div id='input_chat_wrapper' style="position: relative; background-color:rgb(150, 217, 238); width:80%; height:100%;  ">
                         <input id="input_chat" type="text" value="">
                       </div>
                     </div>
@@ -144,7 +144,7 @@
 
   <script>
     var id = '<%=show_user%>';
-    var roomname = "a1"; //방이름
+    var roomname = "1번"; //방이름
     var socket = io(window.location.origin);//백앤드소켓주소입력
 
     window.onload = function () {
